@@ -58,7 +58,15 @@ class AutomatedInsightEngine:
         
         print("🤖 AI Request 2: Generating insights text...")
         # Step 4: Generate insights using separated AI request
-        insights = self.ai_analyzer.generate_insights_text(kpis, analysis_plan)
+        insights_text = self.ai_analyzer.generate_insights_text(kpis, analysis_plan)
+        
+        # Format insights for report generator compatibility
+        insights = {
+            'summary': insights_text,
+            'key_findings': insights_text,
+            'recommendations': insights_text,
+            'trends': insights_text
+        }
         
         print(f"📄 Creating {format_type.upper()} report...")
         # Step 5: Generate report
