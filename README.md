@@ -4,7 +4,7 @@
 
 ---
 
-## 📋 **PROBLEM STATEMENT : H-001 | The Automated Insight Engine**
+## 📋 **PROBLEM STATEMENT: H-001 | The Automated Insight Engine**
 
 ### **The Business Challenge**
 Organizations across industries struggle with manual reporting workflows that consume valuable time and resources:
@@ -305,13 +305,12 @@ date,revenue,customers,orders,conversion_rate
 
 ## 🎉 **DEMO INSTRUCTIONS**
 
-### **Quick Demo (5 minutes)**
+### **Quick Demo**
 1. **Start the app**: `streamlit run app.py`
-2. **Upload sample data**: Use provided CSV/JSON files
-3. **Enter API key**: In the sidebar
-4. **Select format**: PowerPoint or PDF
-5. **Generate report**: Click the button
-6. **Download result**: Professional report ready!
+2. **Upload sample data**: Use provided CSV/JSON files 
+3. **Select format**: PowerPoint or PDF
+4. **Generate report**: Click the button
+5. **Download result**: Professional report ready!
 
 ### **What You'll See**
 - **Professional UI** with drag & drop file upload
