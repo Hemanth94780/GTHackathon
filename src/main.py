@@ -2,7 +2,6 @@ import os
 import sys
 from dotenv import load_dotenv
 from data_processor import DataProcessor
-from insight_generator import InsightGenerator
 from report_generator import ReportGenerator
 import pandas as pd
 
@@ -10,10 +9,18 @@ import pandas as pd
 load_dotenv()
 
 class AutomatedInsightEngine:
-    def __init__(self, openai_api_key: str):
+    def __init__(self, google_api_key: str):
         self.data_processor = DataProcessor()
-        self.insight_generator = InsightGenerator(openai_api_key)
         self.report_generator = ReportGenerator()
+        
+        # Add separated AI analysis components
+        from schema import SchemaDetector
+        from ai_analyzer import AIAnalyzer
+        from smart_kpi_calculator import SmartKPICalculator
+        
+        self.schema_detector = SchemaDetector()
+        self.ai_analyzer = AIAnalyzer(google_api_key)
+        self.kpi_calculator = SmartKPICalculator()
     
     def process_and_generate_report(self, data_files: list, output_filename: str = None, format_type: str = "pptx"):
         """Main pipeline: ingest -> process -> analyze -> generate report"""
@@ -28,38 +35,47 @@ class AutomatedInsightEngine:
         if output_filename is None:
             output_filename = self._generate_filename(data_files, data, format_type)
         
-        # Step 2: Calculate KPIs
-        kpis = self.data_processor.calculate_kpis(data)
-        print(f"📊 Generated {len(kpis)} KPIs: {list(kpis.keys())}")
+        # Step 2: SEPARATED AI ANALYSIS
+        print("🔍 Detecting data schema...")
+        schema = self.schema_detector.detect_schema(data, data_files[0] if data_files else "")
+        
+        print("🤖 AI Request 1: Analyzing data structure...")
+        analysis_plan = self.ai_analyzer.analyze_data_structure(data, schema)
+        print(f"📋 Dataset classified as: {analysis_plan['dataset_type']}")
+        print(f"📊 Required columns: {analysis_plan['required_columns']}")
+        print(f"🎨 Chart specifications: {len(analysis_plan['chart_specs'])} charts planned")
+        
+        print("⚙️ Calculating KPIs based on AI analysis...")
+        kpis = self.kpi_calculator.calculate_kpis(data, analysis_plan)
+        print(f"✅ Generated {len(kpis)} KPIs: {list(kpis.keys())}")
         if len(kpis) == 0:
-            print("⚠️ Warning: No KPIs generated - check your data format")
+            print("⚠️ Warning: No KPIs generated - using fallback analysis")
+            kpis = self.data_processor.calculate_kpis(data)
         
         # Step 3: Generate data summary
         data_summary = f"Dataset contains {len(data)} records with {len(data.columns)} columns. "
         data_summary += f"Date range: {data.index[0]} to {data.index[-1]}. " if 'date' in data.columns else ""
         
-        print("🤖 Generating AI insights...")
-        # Step 4: Generate insights with data sample
-        insights = self.insight_generator.generate_insights(kpis, data_summary, data.head(5) if len(data) > 0 else None)
+        print("🤖 AI Request 2: Generating insights text...")
+        # Step 4: Generate insights using separated AI request
+        insights = self.ai_analyzer.generate_insights_text(kpis, analysis_plan)
         
         print(f"📄 Creating {format_type.upper()} report...")
         # Step 5: Generate report
         os.makedirs("output", exist_ok=True)
         output_path = f"output/{output_filename}"
         if format_type == "pdf":
-            self.report_generator.create_pdf_report(kpis, insights, data, output_path)
+            self.report_generator.create_pdf_report(kpis, insights, data, output_path, analysis_plan)
         else:
-            self.report_generator.create_powerpoint_report(kpis, insights, data, output_path)
+            self.report_generator.create_powerpoint_report(kpis, insights, data, output_path, analysis_plan)
         
         print(f"✅ Report generated: {output_path}")
         
-        # Display API usage statistics
-        usage_stats = self.insight_generator.get_usage_stats()
-        print("\n📈 API Usage Summary:")
-        print(f"   Total Requests: {usage_stats['total_requests']}")
-        print(f"   Input Tokens: {usage_stats['total_input_tokens']:,}")
-        print(f"   Output Tokens: {usage_stats['total_output_tokens']:,}")
-        print(f"   Total Tokens: {usage_stats['total_tokens']:,}")
+        print("\n📈 AI Analysis Complete:")
+        print(f"   Analysis Requests: 2 (Structure + Insights)")
+        print(f"   Dataset Type: {analysis_plan['dataset_type']}")
+        print(f"   KPIs Calculated: {len(kpis)}")
+        print(f"   Charts Generated: Based on AI specifications")
         
         return output_path
     
@@ -111,11 +127,11 @@ class AutomatedInsightEngine:
         # Clean base name
         clean_base = base_name.replace('_', '-').replace(' ', '-').lower()
         
-        # Generate date string
-        date_str = datetime.now().strftime('%Y%m%d')
+        # Generate unique timestamp
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
         
-        # Format: {input_name}_report_{date}.{format}
-        filename = f"{clean_base}_report_{date_str}.{format_type}"
+        # Format: {input_name}_report_{timestamp}.{format}
+        filename = f"{clean_base}_report_{timestamp}.{format_type}"
         
         print(f"📝 Generated filename: {filename}")
         return filename
@@ -143,7 +159,7 @@ def main():
         print("   Example: set GOOGLE_API_KEY=your-key-here")
         return
     
-    # Initialize engine
+    # Initialize engine with separated AI analysis
     engine = AutomatedInsightEngine(GOOGLE_API_KEY)
     
     # Sample data files (supports CSV and JSON)

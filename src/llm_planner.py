@@ -43,26 +43,39 @@ class LLMPlanner:
     def _build_planning_prompt(self, schema: Dict[str, Any]) -> str:
         """Build prompt for LLM analysis planning"""
         return f"""
-        Analyze this dataset schema and return ONLY valid JSON (no markdown, no explanations):
+        Analyze this dataset schema and determine the MOST VALUABLE visualizations for this specific data.
+        Return ONLY valid JSON (no markdown, no explanations):
 
         SCHEMA:
         Columns: {schema['columns']}
         Data Types: {schema['data_types']}
         Sample Data: {schema['sample_rows'][:2]}
         Row Count: {schema['row_count']}
+        Numeric Columns: {schema['numeric_columns']}
+        Categorical Columns: {schema['categorical_columns']}
 
         Return JSON with this EXACT structure:
         {{
             "dataset_type": "<one of: ad_performance, sales_data, survey_feedback, financial_records, operations_metrics, generic_tabular>",
             "kpis": ["list", "of", "relevant", "kpis"],
-            "charts": ["list", "of", "chart", "types"],
+            "charts": ["2-3 most valuable chart types for this data"],
             "dimensions": {{
-                "date": "<date_column_name_or_null>",
-                "category": "<category_column_name_or_null>"
+                "date": "<actual_date_column_name_or_null>",
+                "category": "<actual_category_column_name_or_null>"
             }}
         }}
 
-        Chart types: line_trend, bar_comparison, pie_distribution, scatter_correlation
+        Available chart types:
+        - line_trend: For time series or sequential data
+        - bar_comparison: For comparing categories or metrics
+        - pie_distribution: For showing proportions/distributions
+        - scatter_correlation: For showing relationships between 2 numeric variables
+        - heatmap_correlation: For correlation matrices
+        - histogram_distribution: For showing data distribution
+        - box_plot_outliers: For outlier detection
+        - stacked_bar: For showing composition over categories
+
+        Choose charts that provide the MOST INSIGHT for this specific dataset type and structure.
         """
     
     def _parse_llm_response(self, response_text: str) -> Dict[str, Any]:
@@ -94,7 +107,7 @@ class LLMPlanner:
         return {
             "dataset_type": "generic_tabular",
             "kpis": ["row_count", "column_summary", "data_completeness"],
-            "charts": ["bar_comparison"],
+            "charts": ["bar_comparison", "histogram_distribution"],
             "dimensions": {
                 "date": None,
                 "category": None

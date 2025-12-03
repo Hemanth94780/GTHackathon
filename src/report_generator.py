@@ -21,12 +21,27 @@ class ReportGenerator:
         self.prs = Presentation()
         
     def create_powerpoint_report(self, kpis: Dict[str, Any], insights: Dict[str, str], 
-                                data: pd.DataFrame, output_path: str):
+                                data: pd.DataFrame, output_path: str, analysis_plan: Dict[str, Any] = None):
         """Generate professional PowerPoint presentation with enhanced styling"""
         from pptx.dml.color import RGBColor
         
-        # Create charts first
-        chart_paths = self._create_charts(data)
+        # Store analysis plan for dynamic chart generation
+        self.analysis_plan = analysis_plan
+        
+        # Create AI-driven dynamic charts
+        if analysis_plan:
+            from dynamic_charts import DynamicChartGenerator
+            from datetime import datetime
+            
+            dynamic_generator = DynamicChartGenerator()
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            dataset_type = analysis_plan.get('dataset_type', 'data')
+            
+            chart_paths = dynamic_generator.generate_charts(data, analysis_plan, f"{dataset_type}_{timestamp}")
+            print(f"🎨 Generated {len(chart_paths)} AI-driven charts")
+        else:
+            # Fallback to standard charts
+            chart_paths = self._create_charts(data)
         
         # 1. PROFESSIONAL TITLE SLIDE
         self._create_title_slide(kpis, data)
@@ -307,16 +322,30 @@ class ReportGenerator:
                 print("🚫 Data doesn't warrant chart generation - insufficient variation or too few records")
                 return []
             
-            # Create only relevant charts based on data analysis
-            if chart_strategy['create_trends']:
-                chart_path = self._create_intelligent_trends_chart(data, numeric_cols, charts_dir, chart_strategy)
-                if chart_path:
-                    chart_paths.append(chart_path)
-            
-            if chart_strategy['create_comparison']:
-                chart_path = self._create_intelligent_comparison_chart(data, numeric_cols, charts_dir, chart_strategy)
-                if chart_path:
-                    chart_paths.append(chart_path)
+            # Use dynamic chart generation if analysis plan is available
+            if hasattr(self, 'analysis_plan') and self.analysis_plan:
+                from dynamic_charts import DynamicChartGenerator
+                dynamic_generator = DynamicChartGenerator()
+                
+                # Generate unique chart names based on dataset and timestamp
+                from datetime import datetime
+                timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+                dataset_type = self.analysis_plan.get('dataset_type', 'data')
+                
+                chart_paths = dynamic_generator.generate_charts(data, self.analysis_plan, f"{dataset_type}_{timestamp}")
+                print(f"🎨 Generated {len(chart_paths)} AI-driven charts")
+                return chart_paths
+            else:
+                # Fallback to intelligent charts
+                if chart_strategy['create_trends']:
+                    chart_path = self._create_intelligent_trends_chart(data, numeric_cols, charts_dir, chart_strategy)
+                    if chart_path:
+                        chart_paths.append(chart_path)
+                
+                if chart_strategy['create_comparison']:
+                    chart_path = self._create_intelligent_comparison_chart(data, numeric_cols, charts_dir, chart_strategy)
+                    if chart_path:
+                        chart_paths.append(chart_path)
             
             print(f"📊 Generated {len(chart_paths)} relevant charts")
             return chart_paths
@@ -686,7 +715,7 @@ class ReportGenerator:
             print(f"❌ Error adding chart to slide: {str(e)}")
     
     def create_pdf_report(self, kpis: Dict[str, Any], insights: Dict[str, str], 
-                         data: pd.DataFrame, output_path: str):
+                         data: pd.DataFrame, output_path: str, analysis_plan: Dict[str, Any] = None):
         """Generate professionally formatted PDF report"""
         from reportlab.lib.colors import HexColor, black, white
         from reportlab.platypus import PageBreak, Table, TableStyle
