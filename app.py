@@ -13,14 +13,19 @@ st.markdown("Upload your CSV/JSON files and generate AI-powered reports automati
 
 # Sidebar for configuration
 st.sidebar.header("Configuration")
-api_key = st.sidebar.text_input("Google API Key", type="password", help="Enter your Google Gemini API key")
 output_format = st.sidebar.selectbox("Output Format", ["PowerPoint (.pptx)", "PDF (.pdf)"], help="Choose report format")
+
+# Load API key from environment
+import os
+from dotenv import load_dotenv
+load_dotenv()
+api_key = os.getenv('GOOGLE_API_KEY')
 
 # File upload
 st.header("📁 Upload Data Files")
 uploaded_files = st.file_uploader("Choose CSV or JSON files", accept_multiple_files=True, type=['csv', 'json'])
 
-if uploaded_files and api_key:
+if uploaded_files:
     # Save uploaded files temporarily
     temp_files = []
     for uploaded_file in uploaded_files:
@@ -31,17 +36,21 @@ if uploaded_files and api_key:
             f.write(uploaded_file.getbuffer())
         temp_files.append(temp_path)
         
-        # Show preview
-        if uploaded_file.name.endswith('.csv'):
-            df = pd.read_csv(temp_path)
-        elif uploaded_file.name.endswith('.json'):
-            import json
-            with open(temp_path, 'r') as f:
-                data = json.load(f)
-            df = pd.DataFrame(data) if isinstance(data, list) else pd.json_normalize(data)
-        
-        st.subheader(f"Preview: {uploaded_file.name}")
-        st.dataframe(df.head())
+        # Show preview with error handling
+        try:
+            if uploaded_file.name.endswith('.csv'):
+                df = pd.read_csv(temp_path, on_bad_lines='skip')
+            elif uploaded_file.name.endswith('.json'):
+                import json
+                with open(temp_path, 'r') as f:
+                    data = json.load(f)
+                df = pd.DataFrame(data) if isinstance(data, list) else pd.json_normalize(data)
+            
+            st.subheader(f"Preview: {uploaded_file.name}")
+            st.dataframe(df.head())
+        except Exception as e:
+            st.error(f"Error reading file {uploaded_file.name}: {str(e)}")
+            continue
     
     # Generate report button
     if st.button("🎯 Generate Report", type="primary"):
@@ -49,6 +58,9 @@ if uploaded_files and api_key:
             with st.spinner("Processing data and generating insights..."):
                 # Initialize engine
                 engine = AutomatedInsightEngine(api_key)
+                
+                # Ensure output directory exists
+                os.makedirs("output", exist_ok=True)
                 
                 # Generate report
                 if "PDF" in output_format:
@@ -80,16 +92,16 @@ if uploaded_files and api_key:
                 if os.path.exists(temp_file):
                     os.remove(temp_file)
 
-elif not api_key:
-    st.warning("⚠️ Please enter your Google API key in the sidebar")
 elif not uploaded_files:
     st.info("📤 Please upload CSV or JSON files to get started")
+
+if not api_key:
+    st.error("⚠️ Google API key not found. Please set GOOGLE_API_KEY in your .env file")
 
 # Instructions
 st.header("📋 How to Use")
 st.markdown("""
-1. **Enter API Key**: Add your Google Gemini API key in the sidebar
-2. **Upload Files**: Upload one or more CSV/JSON files with your data
+1. **Upload Files**: Upload one or more CSV/JSON files with your data
 3. **Generate Report**: Click the generate button to create your automated report
 4. **Download**: Download the generated PowerPoint presentation
 

@@ -1,0 +1,212 @@
+[
+  {
+    "date": "2024-01-01",
+    "store_id": 101,
+    "total_sales": 13999,
+    "orders": 215,
+    "avg_order_value": 59.68
+  },
+  {
+    "date": "2024-01-02",
+    "store_id": 101,
+    "total_sales": 7071,
+    "orders": 161,
+    "avg_order_value": 63.97
+  },
+  {
+    "date": "2024-01-03",
+    "store_id": 101,
+    "total_sales": 11078,
+    "orders": 135,
+    "avg_order_value": 63.15
+  },
+  {
+    "date": "2024-01-04",
+    "store_id": 101,
+    "total_sales": 13958,
+    "orders": 185,
+    "avg_order_value": 73.86
+  },
+  {
+    "date": "2024-01-05",
+    "store_id": 101,
+    "total_sales": 14903,
+    "orders": 144,
+    "avg_order_value": 51.28
+  },
+  {
+    "date": "2024-01-06",
+    "store_id": 101,
+    "total_sales": 14630,
+    "orders": 131,
+    "avg_order_value": 70.33
+  },
+  {
+    "date": "2024-01-07",
+    "store_id": 101,
+    "total_sales": 10029,
+    "orders": 169,
+    "avg_order_value": 79.45
+  },
+  {
+    "date": "2024-01-08",
+    "store_id": 101,
+    "total_sales": 9139,
+    "orders": 194,
+    "avg_order_value": 75.04
+  },
+  {
+    "date": "2024-01-09",
+    "store_id": 101,
+    "total_sales": 7965,
+    "orders": 164,
+    "avg_order_value": 76.95
+  },
+  {
+    "date": "2024-01-10",
+    "store_id": 101,
+    "total_sales": 13422,
+    "orders": 116,
+    "avg_order_value": 70.96
+  },
+  {
+    "date": "2024-01-11",
+    "store_id": 101,
+    "total_sales": 7384,
+    "orders": 204,
+    "avg_order_value": 55.58
+  },
+  {
+    "date": "2024-01-12",
+    "store_id": 101,
+    "total_sales": 13315,
+    "orders": 123,
+    "avg_order_value": 55.27
+  },
+  {
+    "date": "2024-01-13",
+    "store_id": 101,
+    "total_sales": 13881,
+    "orders": 194,
+    "avg_order_value": 72.11
+  },
+  {
+    "date": "2024-01-14",
+    "store_id": 101,
+    "total_sales": 9098,
+    "orders": 160,
+    "avg_order_value": 77.83
+  },
+  {
+    "date": "2024-01-15",
+    "store_id": 101,
+    "total_sales": 8265,
+    "orders": 117,
+    "avg_order_value": 69.11
+  },
+  {
+    "date": "2024-01-16",
+    "store_id": 101,
+    "total_sales": 8146,
+    "orders": 197,
+    "avg_order_value": 50.41
+  },
+  {
+    "date": "2024-01-17",
+    "store_id": 101,
+    "total_sales": 11234,
+    "orders": 212,
+    "avg_order_value": 70.65
+  },
+  {
+    "date": "2024-01-18",
+    "store_id": 101,
+    "total_sales": 11350,
+    "orders": 194,
+    "avg_order_value": 65.83
+  },
+  {
+    "date": "2024-01-19",
+    "store_id": 101,
+    "total_sales": 7337,
+    "orders": 189,
+    "avg_order_value": 52.41
+  },
+  {
+    "date": "2024-01-20",
+    "store_id": 101,
+    "total_sales": 11575,
+    "orders": 140,
+    "avg_order_value": 59.74
+  },
+  {
+    "date": "2024-01-21",
+    "store_id": 101,
+    "total_sales": 9332,
+    "orders": 128,
+    "avg_order_value": 52.66
+  },
+  {
+    "date": "2024-01-22",
+    "store_id": 101,
+    "total_sales": 14781,
+    "orders": 166,
+    "avg_order_value": 72.27
+  },
+  {
+    "date": "2024-01-23",
+    "store_id": 101,
+    "total_sales": 14180,
+    "orders": 184,
+    "avg_order_value": 71.39
+  },
+  {
+    "date": "2024-01-24",
+    "store_id": 101,
+    "total_sales": 13338,
+    "orders": 160,
+    "avg_order_value": 78.28
+  },
+  {
+    "date": "2024-01-25",
+    "store_id": 101,
+    "total_sales": 8936,
+    "orders": 193,
+    "avg_order_value": 60.58
+  },
+  {
+    "date": "2024-01-26",
+    "store_id": 101,
+    "total_sales": 12748,
+    "orders": 148,
+    "avg_order_value": 68.27
+  },
+  {
+    "date": "2024-01-27",
+    "store_id": 101,
+    "total_sales": 10334,
+    "orders": 166,
+    "avg_order_value": 58.84
+  },
+  {
+    "date": "2024-01-28",
+    "store_id": 101,
+    "total_sales": 12846,
+    "orders": 196,
+    "avg_order_value": 78.79
+  },
+  {
+    "date": "2024-01-29",
+    "store_id": 101,
+    "total_sales": 8920,
+    "orders": 101,
+    "avg_order_value": 62.12
+  },
+  {
+    "date": "2024-01-30",
+    "store_id": 101,
+    "total_sales": 10841,
+    "orders": 129,
+    "avg_order_value": 63.78
+  }
+]
